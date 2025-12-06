@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Listfy — Your Store</title>
+  <meta name="description" content="Listfy — lightweight e‑commerce starter site" />
+  <style>
+    :root{--accent:#0066ff;--bg:#f7f8fb;--card:#ffffff;--muted:#666}
+    *{box-sizing:border-box}
+    body{font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial;margin:0;background:var(--bg);color:#111}
+    header{background:linear-gradient(90deg,var(--accent),#4aa3ff);color:#fff;padding:18px 20px;display:flex;align-items:center;justify-content:space-between}
+    .brand{font-weight:700;font-size:20px}
+    .container{max-width:1100px;margin:28px auto;padding:0 16px}
+    .controls{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+    input[type=search],select{padding:10px 12px;border-radius:8px;border:1px solid #ddd;min-width:160px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .card{background:var(--card);border-radius:12px;padding:12px;box-shadow:0 6px 18px rgba(15,20,30,0.06);display:flex;flex-direction:column}
+    .thumb{height:160px;border-radius:10px;object-fit:cover;margin-bottom:8px}
+    .title{font-weight:600;margin:6px 0}
+    .price{font-weight:700;color:var(--accent)}
+    .btn{background:var(--accent);color:#fff;padding:8px 10px;border-radius:8px;border:0;cursor:pointer}
+    .btn.secondary{background:#eee;color:#111}
+    .cart-btn{position:relative}
+    .badge{position:absolute;top:-8px;right:-8px;background:#ff3b30;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:12px}
+    .drawer{position:fixed;right:0;top:0;height:100%;width:360px;max-width:92%;background:#fff;box-shadow:-6px 0 30px rgba(10,10,20,0.15);transform:translateX(110%);transition:transform .25s;z-index:120}
+    .drawer.open{transform:translateX(0)}
+    .drawer-header{padding:14px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
+    .drawer-body{padding:14px;overflow:auto;height:calc(100% - 120px)}
+    .cart-item{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+    .cart-thumb{width:64px;height:64px;object-fit:cover;border-radius:8px}
+    .qty{display:flex;gap:6px;align-items:center}
+    .checkout{padding:14px;border-top:1px solid #eee}
+    footer{padding:18px;text-align:center;color:var(--muted);font-size:14px;margin-top:28px}
+    @media (max-width:600px){header{padding:12px} .brand{font-size:16px}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">Listfy</div>
+    <div style="display:flex;gap:12px;align-items:center">
+      <div style="font-size:14px;opacity:.95">Build your store — free template</div>
+      <button id="openCartBtn" class="btn cart-btn">Cart <span id="cartCount" class="badge" style="display:none">0</span></button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="controls">
+      <input id="search" type="search" placeholder="Search products..." />
+      <select id="categoryFilter">
+        <option value="all">All categories</option>
+      </select>
+      <button id="clearBtn" class="btn secondary">Clear</button>
+    </section>
+
+    <section id="products" class="grid"></section>
+
+    <footer>Made with ❤️ — Listfy template. Customize to add payments and shipping.</footer>
+  </main>
+
+  <aside id="cartDrawer" class="drawer" aria-hidden="true">
+    <div class="drawer-header">
+      <strong>Your Cart</strong>
+      <div><button id="closeCart" class="btn secondary">Close</button></div>
+    </div>
+    <div id="cartBody" class="drawer-body"></div>
+    <div class="checkout">
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px"><div><strong>Total</strong></div><div id="cartTotal">₹0</div></div>
+      <button id="checkoutBtn" class="btn" style="width:100%;margin-bottom:8px">Checkout</button>
+      <button id="clearCartBtn" class="btn secondary" style="width:100%">Clear Cart</button>
+    </div>
+  </aside>
+
+  <div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);align-items:center;justify-content:center;padding:20px;z-index:140">
+    <div style="background:#fff;padding:18px;border-radius:12px;max-width:620px;width:100%">
+      <h3 id="modalTitle">Order summary</h3>
+      <div id="modalContent"></div>
+      <div style="text-align:right;margin-top:12px"><button id="closeModal" class="btn">Close</button></div>
+    </div>
+  </div>
+
+  <script>
+    const PRODUCTS = [
+      {id: 'p1', title: 'Eco T-shirt', price: 499, category: 'Clothing', img: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=800&auto=format&fit=crop'},
+      {id: 'p2', title: 'Bluetooth Headphones', price: 1499, category: 'Electronics', img: 'https://images.unsplash.com/photo-1518449030292-9d14f4f0f4b2?q=80&w=800&auto=format&fit=crop'},
+      {id: 'p3', title: 'Handmade Mug', price: 349, category: 'Home', img: 'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=800&auto=format&fit=crop'},
+      {id: 'p4', title: 'Canvas Backpack', price: 1299, category: 'Accessories', img: 'https://images.unsplash.com/photo-1520975973936-8b7c7d28d1b2?q=80&w=800&auto=format&fit=crop'},
+      {id: 'p5', title: 'Notebook Set', price: 249, category: 'Stationery', img: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=800&auto=format&fit=crop'}
+    ];
+
+    const CART_KEY = 'listfy_cart_v1';
+    let cart = JSON.parse(localStorage.getItem(CART_KEY) || '{}');
+
+    function saveCart(){ localStorage.setItem(CART_KEY, JSON.stringify(cart)); updateCartUI(); }
+    function addToCart(id){ cart[id] = (cart[id]||0)+1; saveCart(); }
+    function removeFromCart(id){ delete cart[id]; saveCart(); }
+    function setQty(id, qty){ if(qty<=0) removeFromCart(id); else cart[id]=qty; saveCart(); }
+
+    const productsEl = document.getElementById('products');
+    const searchEl = document.getElementById('search');
+    const catEl = document.getElementById('categoryFilter');
+    const cartCount = document.getElementById('cartCount');
+    const openCartBtn = document.getElementById('openCartBtn');
+    const cartDrawer = document.getElementById('cartDrawer');
+    const closeCart = document.getElementById('closeCart');
+    const cartBody = document.getElementById('cartBody');
+    const cartTotal = document.getElementById('cartTotal');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    const clearCartBtn = document.getElementById('clearCartBtn');
+    const modal = document.getElementById('modal');
+    const modalContent = document.getElementById('modalContent');
+    const closeModal = document.getElementById('closeModal');
+    const clearBtn = document.getElementById('clearBtn');
+
+  </script>
+</body>
+</html>
