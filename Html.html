@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colorful E‑Commerce | Listfy Shop</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+        }
+        header {
+            background: #ff6f61;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .banner {
+            background: url('https://images.unsplash.com/photo-1542291026-7eec264c27ff') center/cover;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+            text-shadow: 3px 3px 6px black;
+        }
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: 0.3s;
+            text-align: center;
+        }
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: #ff6f61;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        footer {
+            background: #333;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>Listfy – Colorful E‑Commerce</header>
+
+    <div class="banner">Welcome to Your Shop</div>
+
+    <h2 style="text-align:center; margin-top:20px;">Featured Products</h2>
+    <div class="products">
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f" alt="Product 1">
+            <h3>Stylish Headphones</h3>
+            <p>₹999</p>
+            <a href="#" class="btn">Buy Now</a>
+        </div>
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1503602642458-232111445657" alt="Product 2">
+            <h3>Smart Watch</h3>
+            <p>₹1,499</p>
+            <a href="#" class="btn">Buy Now</a>
+        </div>
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f" alt="Product 3">
+            <h3>Wireless Speaker</h3>
+            <p>₹799</p>
+            <a href="#" class="btn">Buy Now</a>
+        </div>
+
+    </div>
+
+    <footer>© 2025 Listfy Store | Built by You</footer>
+</body>
+</html>
